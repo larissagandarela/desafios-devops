@@ -1,4 +1,3 @@
-
 {
   "name": "desafio-kubernetes",
   "version": "1.0.0",
@@ -9,6 +8,7 @@
     "start": "node app.js"
   },
   "dependencies": {
+    "desafio-kubernetes": "file:",
     "express": "^4.16.2"
   }
 }
