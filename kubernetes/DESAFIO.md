@@ -19,7 +19,7 @@ O objetivo desta solução é demonstrar como executar o deploy de uma aplicaç�
 
 Para a criação da imagem Docker, foi utilizado o Dockerfile disponível no repositório. Como o ambiente de execução é um cluster Kubernetes local com Minikube, a imagem foi construída diretamente dentro do ambiente Docker do Minikube, evitando assim a necessidade de envio para um registro externo (como Docker Hub).
 
-Foi necessária a alteração da versão do Alpine Linux de 9 para 18, uma vez que a versão anterior não permitia a geração correta da imagem. Isso possivelmente ocorreu devido a incompatibilidades com versões mais recentes de bibliotecas ou dependências utilizadas na aplicação.
+Foi necessária a alteração da versão do Alpine Linux de 9 para 18, uma vez que a versão anterior não permitia a geração correta da imagem. Isso possivelmente ocorreu devido a incompatibilidades com versões mais recentes de bibliotecas ou dependências utilizadas na aplicação. Também foi ajustado o comando de inicialização no Dockerfile de CMD npm start para CMD ["npm", "start"], garantindo a execução direta do processo, sem shell intermediário, o que melhora o controle dos sinais e a finalização do container.
 
 O processo é feito com os seguintes comandos:
 
