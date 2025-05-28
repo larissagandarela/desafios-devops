@@ -9,13 +9,6 @@ if ! minikube status >/dev/null 2>&1; then
   minikube start
 fi
 
-if ! pgrep -f "minikube tunnel" > /dev/null; then
-  echo "Iniciando minikube tunnel em background..."
-  nohup minikube tunnel > /dev/null 2>&1 &
-else
-  echo "minikube tunnel já está rodando."
-fi
-
 if ! minikube addons list | grep -q "^ingress.*enabled"; then
   echo "Ativando ingress no Minikube..."
   minikube addons enable ingress
@@ -25,7 +18,8 @@ echo "Construindo a imagem Docker..."
 eval $(minikube docker-env)
 docker build -t app-idwall:latest .
 
-DOMAIN="app.127.0.0.1.nip.io"
+MINIKUBE_IP=$(minikube ip)
+DOMAIN="app.${MINIKUBE_IP}.nip.io"
 
 echo "Aplicando namespace..."
 kubectl apply -f k8s/namespace.yaml
@@ -46,7 +40,12 @@ echo "Aplicando manifestos Kubernetes..."
 kubectl apply -f k8s/configmap.yaml
 kubectl apply -f k8s/deployment.yaml
 kubectl apply -f k8s/service.yaml
-kubectl apply -f k8s/ingress.yaml
+
+echo "Gerando ingress com domínio ${DOMAIN}..."
+sed "s/__DOMAIN__/${DOMAIN}/g" k8s/ingress.yaml > k8s/ingress-temp.yaml
+
+kubectl apply -f k8s/ingress-temp.yaml
+rm k8s/ingress-temp.yaml
 
 echo "Aguardando rollout do deployment..."
 kubectl rollout status deployment/app-idwall -n idwall-app
