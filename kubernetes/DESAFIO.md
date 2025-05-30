@@ -78,10 +78,17 @@ kubectl get pods -n idwall-app
 
 Após a conclusão do deploy, o script exibe automaticamente a URL de acesso à aplicação, utilizando o domínio dinâmico do serviço nip.io.
 
-URL da aplicação:
+Acesse em:
 
 ```bash
-http://app.127.0.0.1.nip.io
+http://app.<MINIKUBE_IP>.nip.io
+
+```
+
+Exemplo: 
+
+```bash
+ http://app.192.168.49.2.nip.io 
 
 ```
 
